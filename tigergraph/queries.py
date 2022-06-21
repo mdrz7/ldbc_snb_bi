@@ -98,7 +98,7 @@ def precompute(query_num, endpoint):
     if query_num != 9:
         response = requests.get(f'{endpoint}/query/ldbc_snb/bi{query_num}precompute', headers=HEADERS).json()
     else:
-        response = requests.get(f'{endpoint}/query/ldbc_snb/precompute_root_post', headers=HEADERS).json()
+        response = requests.get(f'{endpoint}/query/ldbc_snb/precompute_root_post_invert', headers=HEADERS).json()
     return time.time() - start
 
 def cleanup(query_num, endpoint):

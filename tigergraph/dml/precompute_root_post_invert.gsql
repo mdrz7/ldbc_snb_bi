@@ -1,0 +1,12 @@
+CREATE OR REPLACE DISTRIBUTED QUERY precompute_root_post_invert() SYNTAX v2 {
+  ListAccum<UINT> @postId;
+  M(ANY) = {Post.*};
+  M = SELECT p FROM Post:p
+  ACCUM p.@postId += p.id;
+  WHILE M.size() > 0 DO
+  M = SELECT t FROM M:s -(<REPLY_OF)- Comment:t
+    ACCUM t.@postId += s.@postId.get(0),
+    INSERT INTO ROOT_POST_INVERT (FROM, TO) VALUES (s.@postId.get(0), t.id);
+  #COMMIT;
+  END;
+}
